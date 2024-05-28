@@ -20,7 +20,7 @@
         <el-table-column prop="updateTime" label="最后操作时间"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="text">修改</el-button>
+            <el-button type="text" @click="handleUpdateEmployee(scope.row)">修改</el-button>
             <el-button type="text" @click="handleStartOrStop(scope.row)">{{scope.row.status === 1 ? '禁用':'启用'}}</el-button>
           </template>
         </el-table-column>
@@ -112,6 +112,17 @@ export default  {
     handleAddEmployee(){
       //路由跳转
       this.$router.push('/employee/add')
+    },
+    //跳转到修改员工页面（组件）
+    handleUpdateEmployee(row){
+      if(row.username === 'admin'){
+        this.$message.error('系统管理员账号不能修改！')
+        return
+      }
+      this.$router.push({
+        path:'/employee/add',
+        query: {id: row.id}
+      })
     }
   }
 
