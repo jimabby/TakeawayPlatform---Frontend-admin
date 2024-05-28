@@ -35,3 +35,11 @@ export const enableOrDisableEmployee = (params: any) =>
     'method': 'post',
     'params': {id: params.id}
   })
+
+  // 新增员工
+export const addEmployee = (params: any) =>
+  request({
+    'url': `/employee`,
+    'method': 'post',
+    'data': params
+  })
