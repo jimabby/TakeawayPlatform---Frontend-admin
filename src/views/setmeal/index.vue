@@ -18,7 +18,7 @@
         <el-button type="primary" style="margin-left: 25px;" @click="pageQuery()">搜索</el-button>
 
         <div style="float: right;">
-          <el-button type="danger">批量删除</el-button>
+          <el-button type="danger" @click="handleDelete('B')">批量删除</el-button>
           <el-button type="info">+ 新建套餐</el-button>
         </div>
       </div>
@@ -64,8 +64,8 @@
 </template>
 
 <script lang="ts">
-import { getCategoryByType} from "@/api/category";
-import { getSetmealPage, enableOrDisableSetmeal } from '@/api/setMeal'
+import { getCategoryByType } from "@/api/category";
+import { getSetmealPage, enableOrDisableSetmeal, deleteSetmeal } from '@/api/setMeal'
 export default {
   //模型数据
   data(){
@@ -87,7 +87,8 @@ export default {
           label:'启售'
         }
       ],
-      status: ''
+      status: '',//售卖状态
+      multipleSelection: '' //当前表格选中的多个元素
     }
   },
   created(){
@@ -144,6 +145,36 @@ export default {
           }
         })
       })
+    },
+    //删除套餐
+    handleDelete(type: string, id: string){
+      this.$confirm('确认删除当前指定的套餐，是否继续？','提示',{
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+          let param = ''
+          if(type == 'B'){ //批量删除
+            const arr = new Array
+            this.multipleSelection.forEach(element => {
+              arr.push(element.id)
+            });
+            param = arr.join(',')
+          }else{
+            param = id
+          }
+          deleteSetmeal(param).then(res => {
+            if(res.data.code === 1){
+              this.$message.success('删除成功！')
+              this.pageQuery()
+            }else{
+              this.$message.error(res.data.msg)
+            }
+          })
+        })
+    },
+    handleSelectionChange(val){
+      this.multipleSelection = val
     }
   }
 
