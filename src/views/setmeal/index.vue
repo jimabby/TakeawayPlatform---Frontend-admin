@@ -65,7 +65,7 @@
 
 <script lang="ts">
 import { getCategoryByType} from "@/api/category";
-import { getSetmealPage } from '@/api/setMeal'
+import { getSetmealPage, enableOrDisableSetmeal } from '@/api/setMeal'
 export default {
   //模型数据
   data(){
@@ -125,6 +125,25 @@ export default {
     handleCurrentChange(page){
       this.page = page
       this.pageQuery()
+    },
+    //套餐启售停售操作
+    handleStartOrStop(row){
+      const p = {
+        id: row.id,
+        status: !row.status ? 1 : 0
+      }
+      this.$confirm('确认调整当前套餐的售卖状态，是否继续？','提示',{
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        enableOrDisableSetmeal(p).then(res => {
+          if(res.data.code === 1){
+            this.$message.success("套餐售卖状态修改成功！")
+            this.pageQuery()
+          }
+        })
+      })
     }
   }
 
