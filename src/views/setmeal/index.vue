@@ -19,7 +19,7 @@
 
         <div style="float: right;">
           <el-button type="danger" @click="handleDelete('B')">批量删除</el-button>
-          <el-button type="info">+ 新建套餐</el-button>
+          <el-button type="info" @click="() => this.$router.push('/setmeal/add')">+ 新建套餐</el-button>
         </div>
       </div>
 
